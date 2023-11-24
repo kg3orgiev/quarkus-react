@@ -2,11 +2,13 @@ package com.k0c3.fullstack.user;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.quarkus.hibernate.reactive.panache.PanacheEntity;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -32,5 +34,23 @@ public class User extends PanacheEntity {
   @JsonProperty("password")
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+
+    User user = (User) o;
+
+    return Objects.equals(id, user.id) &&
+            Objects.equals(name, user.name) &&
+            Objects.equals(password, user.password) &&
+            Objects.equals(created, user.created) &&
+            Objects.equals(version, user.version);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, name, password, created, version, roles);
   }
 }
