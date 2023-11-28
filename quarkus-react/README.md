@@ -14,3 +14,7 @@ http://localhost:8080/
 
 Test user : admin / admin
 Enjoy it, have a fun !
+
+
+![Monolit2](https://github.com/kg3orgiev/quarkus-react/assets/93709100/d68a80a9-ff44-4c24-bf96-c4a3845f60b7)
+![Monolit1](https://github.com/kg3orgiev/quarkus-react/assets/93709100/fac01262-5597-4a0a-af78-e9aa8882703f)
