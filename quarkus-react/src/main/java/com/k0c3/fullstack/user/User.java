@@ -24,7 +24,8 @@ public class User extends PanacheEntity {
   @Column(updatable = false, nullable = false)
   public ZonedDateTime created;
 
-  @Version public int version;
+  @Version
+  public int version;
 
   @ElementCollection(fetch = FetchType.EAGER)
   @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "id"))
