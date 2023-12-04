@@ -1,6 +1,6 @@
 import React from 'react';
 import {ThemeProvider} from '@mui/material';
-import {Provider} from './__tests__/react-redux';
+import {Provider} from 'react-redux';
 import {render as testRender} from '@testing-library/react';
 import {store} from '../store';
 import {theme} from '../styles/theme';
