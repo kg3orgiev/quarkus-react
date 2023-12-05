@@ -11,6 +11,8 @@ Download source code !
 -- There is a script that will insert several tables and with dummy user and roles
 
 http://localhost:8080/
+There is also public url :
+https://k0c3-task-manager.fly.dev/
 
 Test user : admin / admin
 Enjoy it, have a fun !

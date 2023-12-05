@@ -1,0 +1,76 @@
+docker run --rm --name postgresql -p 5432:5432 -e POSTGRES_PASSWORD=pgpass -d postgres
+
+No native
+./target/quarkus-react-reactive-1.0-SNAPSHOT-runner -Dquarkus.datasource.username=postgres -Dquarkus.datasource.password=pgpass -Dquarkus.datasource.reactive.url=postgresql://localhost:5432/postgres -Dquarkus.hibernate-orm.database.generation=create
+
+
+curl -X POST -d"{\"name\":\"admin\",\"password\":\"quarkus\"}" -H "Content-Type: application/json" localhost:8080/api/v1/auth/login
+
+./target/quarkus-react-reactive-1.0-SNAPSHOT-runner -Dquarkus.datasource.username=postgres -Dquarkus.datasource.password=pgpass -Dquarkus.datasource.reactive.url=postgresql://localhost:5432/postgres -Dquarkus.hibernate-orm.database.generation=create
+
+
+
+
+java -jar target/quarkus-app/quarkus-run.jar
+
+-Dquarkus.datasource.username=postgres -Dquarkus.datasource.password=pgpass -Dquarkus.datasource.reactive.url=postgresql://localhost:5432/postgres -Dquarkus.hibernate-orm.database.generation=create
+
+
+steps
+
+1. ./mvnw -Pfrontend,native clean package
+2. docker build -f src/main/docker/Dockerfile.native -t quarkus/quarkus-react-reactive .
+3. docker run --rm --name postgresql -p 5432:5432 -e POSTGRES_PASSWORD=pgpass -d postgres
+4. docker run -d -p 8080:8080 --link postgresql --name reactive-native
+quarkus/quarkus-react-reactive -e -Dquarkus.datasource.username=postgres -Dquarkus.datasource.password=pgpass -Dquarkus.datasource.reactive.url=postgresql://host.docker.internal:5432/postgres -Dquarkus.hibernate-orm.database.generation=create
+
+
+
+to k8s
+
+mvnw clean package k8s:build -Pfrontend,native
+docker login
+mvnw k8s:push
+
+
+if we don't have docker installed in case we are in CI
+mvnw clean package k8s:build k8s:push -DskipTests -Djkube.build.strategy=jib -Djkube.docker.push.username=kgeorgiev86 -Djkube.docker.push.password=$password
+
+
+
+1. mvnw -Pnative,frontend,fly clean package
+2. mvnw k8s:build //Create image to local docker
+
+2.1 ( May need to login to docker  `docker login` )
+2.2
+if we don't have docker installed in case we are in CI
+mvnw clean package -Pnative,frontend,fly k8s:build k8s:push -DskipTests -Djkube.build.strategy=jib -Djkube.docker.push.username=kgeorgiev86 -Djkube.docker.push.password=$password
+
+3. mvnw k8s:push //Push image to Docker Hub
+
+4. flyctl launch --image kgeorgiev86/task-manager-reactive:fly
+5. flyctl deploy
+
+Postgres cluster task-postgres created
+  Username:    postgres
+  Password:    92Sk3TWRbfLQLll
+  Hostname:    task-postgres.internal
+  Flycast:     fdaa:3:bd83:0:1::7
+  Proxy port:  5432
+  Postgres port:  5433
+  Connection string: postgres://postgres:92Sk3TWRbfLQLll@task-postgres.flycast:5432
+
+Save your credentials in a secure place -- you won't be able to see them again!
+
+Connect to postgres
+Any app within the k0c3to0o organization can connect to this Postgres using the above connection string
+
+Now that you've set up Postgres, here's what you need to understand: https://fly.io/docs/postgres/getting-started/what-you-should-know/
+Checking for existing attachments
+Registering attachment
+Creating database
+Creating user
+
+Postgres cluster task-postgres is now attached to k0c3-task-manager
+The following secret was added to k0c3-task-manager:
+  DATABASE_URL=postgres://k0c3_task_manager:6UrrPGK6y8wZltc@task-postgres.flycast:5432/k0c3_task_manager?sslmode=disable
